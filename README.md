@@ -1,6 +1,6 @@
-== Rspec JSON Matchers
+# Rspec JSON Matchers
 
-=== Usage for key
+## Usage for key
 
 ```ruby
 get '/anyPath/'
@@ -8,7 +8,7 @@ get '/anyPath/'
 response.should have_json_key(:success)
 ```
 
-=== Usage for value
+## Usage for value
 
 ```ruby
 get '/anyPath/'
