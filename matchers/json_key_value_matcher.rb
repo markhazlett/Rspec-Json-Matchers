@@ -1,24 +1,38 @@
-RSpec::Matchers.define :have_json_key do |expected_key|
-  match do |response|
-    @body = MultiJson.load(response.body)
+class HaveJsonKey
+  def initialize(expected_key, options)
+    @expected_key = expected_key
+    @options = options
+  end
 
-    result = @body.key?(expected_key.to_s)
-    result &&= @body[expected_key.to_s] == @expected_val if @val_provided
+  def matches?(controller)
+    @body = MultiJson.load(controller.response.body)
+
+    result = @body.key?(@expected_key.to_s)
+    result = @body[@expected_key.to_s] == @options[:value] if @value_provided
     result
   end
 
-  chain :with_value do |val|
-    @val_provided = true
-    @expected_val = val
+  def with_value(value)
+    @options[:value] = value
+    @value_provided = true
+    self
   end
 
-  description do
-    result = "have json key #{expected_key.inspect}"
+  def description
+    result = "have json key #{@expected_key.inspect}"
     result << " with value #{@expected_val.inspect}" if @val_provided
     result
   end
 
-  failure_message_for_should do |actual|
-    "expected response " + description + ", was #{@body[expected_key.to_s].inspect}"
+  def failure_message
+    "expected response to have json key #{@expected_key} but was not there"
   end
+
+  def negative_failure_message
+    "expected response to not have json key #{@expected_key} but found it"
+  end
+end
+
+def have_json_key(expected_key, options = {})
+  HaveJsonKey.new(expected_key, options)
 end
