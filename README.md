@@ -5,7 +5,7 @@
 ```ruby
 get '/anyPath/'
 
-response.should have_json_key(:success)
+it { should have_json_key(:success) }
 ```
 
 ## Usage for value
@@ -13,5 +13,5 @@ response.should have_json_key(:success)
 ```ruby
 get '/anyPath/'
 
-response.should have_json_key(:success).with_value(true)
+it { should have_json_key(:success).with_value(true) }
 ```
